@@ -1,0 +1,127 @@
+databases:
+  - name: skillsphere-db
+    databaseName: skillsphere
+    user: postgres
+    plan: free
+
+services:
+  # 1. Eureka Discovery Server (Private Service)
+  - type: pserv
+    name: eureka-server
+    env: docker
+    dockerfilePath: ./infrastructure/eureka-server/Dockerfile
+    dockerContext: ./infrastructure/eureka-server
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8761
+
+  # 2. Milestone 1 - Skill Management Service
+  - type: pserv
+    name: m1-skill-service
+    env: docker
+    dockerfilePath: ./backend/skill-management-service/Dockerfile
+    dockerContext: ./backend/skill-management-service
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8081
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: skillsphere-db
+          property: connectionString
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+
+  # 3. Milestone 2 - Learning Service
+  - type: pserv
+    name: m2-learning-service
+    env: docker
+    dockerfilePath: ./backend/learning-service/Dockerfile
+    dockerContext: ./backend/learning-service
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8082
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: skillsphere-db
+          property: connectionString
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+
+  # 4. Milestone 3 - Certification Management Service
+  - type: pserv
+    name: m3-certification-service
+    env: docker
+    dockerfilePath: ./backend/certification-management-service/Dockerfile
+    dockerContext: ./backend/certification-management-service
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8083
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: skillsphere-db
+          property: connectionString
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: M1_BASE_URL
+        value: http://m1-skill-service:8081/api
+
+  # 5. Milestone 4 - Career Development Service
+  - type: pserv
+    name: m4-career-service
+    env: docker
+    dockerfilePath: ./backend/career-service/Dockerfile
+    dockerContext: ./backend/career-service
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8087
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: skillsphere-db
+          property: connectionString
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+
+  # 6. Notification Service
+  - type: pserv
+    name: notification-service
+    env: docker
+    dockerfilePath: ./backend/notification-service/Dockerfile
+    dockerContext: ./backend/notification-service
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8084
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: skillsphere-db
+          property: connectionString
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+
+  # 7. API Gateway (Public Web Service)
+  - type: web
+    name: skillsphere-api-gateway
+    env: docker
+    dockerfilePath: ./infrastructure/api-gateway/Dockerfile
+    dockerContext: ./infrastructure/api-gateway
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8085
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/

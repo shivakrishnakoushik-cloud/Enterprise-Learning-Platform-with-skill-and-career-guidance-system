@@ -1,0 +1,36 @@
+[build]
+  publish = "dist/frontend/browser"
+  command = "npm run build"
+
+# API Gateway Reverse Proxy (Solves CORS and routes requests to Render API Gateway)
+# Replace 'https://skillsphere-api-gateway.onrender.com' with your actual Render API Gateway service URL
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://skillsphere-api-gateway.onrender.com/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/learning-api/*"
+  to = "https://skillsphere-api-gateway.onrender.com/learning-api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/certification-api/*"
+  to = "https://skillsphere-api-gateway.onrender.com/certification-api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/notification-api/*"
+  to = "https://skillsphere-api-gateway.onrender.com/notification-api/:splat"
+  status = 200
+  force = true
+
+# Angular Single Page Application (SPA) Fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

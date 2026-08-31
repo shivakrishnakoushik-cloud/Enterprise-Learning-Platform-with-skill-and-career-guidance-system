@@ -1,0 +1,5 @@
+/api/*  https://skillsphere-api-gateway.onrender.com/api/:splat  200
+/learning-api/*  https://skillsphere-api-gateway.onrender.com/learning-api/:splat  200
+/certification-api/*  https://skillsphere-api-gateway.onrender.com/certification-api/:splat  200
+/notification-api/*  https://skillsphere-api-gateway.onrender.com/notification-api/:splat  200
+/*  /index.html  200
