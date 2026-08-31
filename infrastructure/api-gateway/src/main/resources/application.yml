@@ -10,19 +10,19 @@ spring:
 
             # Milestone 4 Backend Route (must precede the general /api/** rule below)
             - id: career-service-route
-              uri: lb://CAREER-SERVICE
+              uri: ${CAREER_SERVICE_URL:lb://CAREER-SERVICE}
               predicates:
                 - Path=/api/career/**
 
             # Milestone 1 Backend Route
             - id: skill-management-service-route
-              uri: lb://SKILL-MANAGEMENT-SERVICE
+              uri: ${SKILL_SERVICE_URL:lb://SKILL-MANAGEMENT-SERVICE}
               predicates:
                 - Path=/api/**
 
             # Milestone 2 Backend Route
             - id: learning-service-route
-              uri: lb://LEARNING-SERVICE
+              uri: ${LEARNING_SERVICE_URL:lb://LEARNING-SERVICE}
               predicates:
                 - Path=/learning-api/**
               filters:
@@ -30,7 +30,7 @@ spring:
 
             # Milestone 3 Backend Route
             - id: certification-management-service-route
-              uri: lb://CERTIFICATION-MANAGEMENT-SERVICE
+              uri: ${CERTIFICATION_SERVICE_URL:lb://CERTIFICATION-MANAGEMENT-SERVICE}
               predicates:
                 - Path=/certification-api/**
               filters:
@@ -38,7 +38,7 @@ spring:
 
             # Notification Service Route (Unified Notification Center)
             - id: notification-service-route
-              uri: lb://NOTIFICATION-SERVICE
+              uri: ${NOTIFICATION_SERVICE_URL:lb://NOTIFICATION-SERVICE}
               predicates:
                 - Path=/notification-api/**
               filters:
@@ -49,11 +49,11 @@ server:
 
 eureka:
   client:
+    enabled: ${EUREKA_CLIENT_ENABLED:${EUREKA_ENABLED:true}}
     service-url:
       defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:${EUREKA_URL:http://eureka-server:8761/eureka/}}
-
-    register-with-eureka: true
-    fetch-registry: true
+    register-with-eureka: ${EUREKA_REGISTER_WITH_EUREKA:true}
+    fetch-registry: ${EUREKA_FETCH_REGISTRY:true}
 
   instance:
     prefer-ip-address: ${EUREKA_PREFER_IP:true}
